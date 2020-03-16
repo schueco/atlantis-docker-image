@@ -25,7 +25,7 @@ RUN \
  && rm -rf "SHA256SUMS" "keycloak_provider_SHA256SUMS" "terraform-provider-keycloak_v${KEYCLOAK_PROVIDER_VERSION}_linux_amd64_static.zip" "LICENSE"
 
 
-FROM runatlantis/atlantis:v0.11.1
+FROM runatlantis/atlantis@sha256:480fc880fd79dcbbb6a8d149bd060a1acf28689bf1c3391d07209efc31437815
 
 COPY --from=downloader /terraform-provider-keycloak* /home/atlantis/.terraform.d/plugins/
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
