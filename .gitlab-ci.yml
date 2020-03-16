@@ -1,0 +1,33 @@
+include:
+  - project: 'plan.one/templates'
+    file: '.docker-workflow-template.yml'
+    ref: 'v1.4.0'
+
+stages:
+  - lint
+  - docker build
+  - docker push
+
+docker:lint:
+  extends:
+    - .docker:lint
+
+docker:build:
+  extends:
+    - .docker:build
+
+docker:push:develop:
+  extends:
+    - .docker:push
+  only:
+    - develop
+  variables:
+    IMAGE_TAG: develop
+
+docker:push:latest:
+  extends:
+    - .docker:push
+  only:
+    - master
+  variables:
+    IMAGE_TAG: latest
