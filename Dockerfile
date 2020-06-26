@@ -1,5 +1,5 @@
 FROM alpine:3.11.3 AS downloader
-RUN apk --no-cache add unzip=6.0-r4 curl=7.67.0-r0
+RUN apk --no-cache add unzip curl
 
 ENV KEYCLOAK_PROVIDER_VERSION 1.19.0
 ENV TERRAGRUNT_VERSION=v0.23.2
