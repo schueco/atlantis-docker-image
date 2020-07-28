@@ -1,12 +1,12 @@
 FROM alpine:3.11.3 AS downloader
 RUN apk --no-cache add unzip=6.0-r6 curl=7.67.0-r0
 
-ENV KEYCLOAK_PROVIDER_VERSION 1.19.0
-ENV TERRAGRUNT_VERSION=v0.23.2
+ENV KEYCLOAK_PROVIDER_VERSION 1.20.0
+ENV TERRAGRUNT_VERSION=v0.23.31
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
-    
+
 RUN \
  # Download the binary and checksum
  echo "Downloading release ${KEYCLOAK_PROVIDER_VERSION}" \
@@ -25,7 +25,7 @@ RUN \
  && rm -rf "SHA256SUMS" "keycloak_provider_SHA256SUMS" "terraform-provider-keycloak_v${KEYCLOAK_PROVIDER_VERSION}_linux_amd64_static.zip" "LICENSE"
 
 
-FROM runatlantis/atlantis@sha256:480fc880fd79dcbbb6a8d149bd060a1acf28689bf1c3391d07209efc31437815
+FROM runatlantis/atlantis:v0.14.0
 
 COPY --from=downloader /terraform-provider-keycloak* /home/atlantis/.terraform.d/plugins/
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
