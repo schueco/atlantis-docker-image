@@ -26,7 +26,7 @@ RUN \
 
 
 FROM runatlantis/atlantis:v0.14.0
-RUN apk --no-cache add py-pip
+RUN apk --no-cache add py-pip~=18.1
 
 COPY --from=downloader /terraform-provider-keycloak* /home/atlantis/.terraform.d/plugins/
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
