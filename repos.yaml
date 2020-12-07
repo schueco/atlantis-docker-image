@@ -13,7 +13,7 @@ workflows:
           command: 'echo "terraform${ATLANTIS_TERRAFORM_VERSION}"'
       - run: >
           terragrunt plan -no-color -out=$PLANFILE
-          | fgrep -v "Refreshing state..."
+          | grep -v "Refreshing state..."
     apply:
       steps:
       - env:
