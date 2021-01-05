@@ -25,7 +25,7 @@ RUN \
  && rm -rf "SHA256SUMS" "keycloak_provider_SHA256SUMS" "terraform-provider-keycloak_v${KEYCLOAK_PROVIDER_VERSION}_linux_amd64_static.zip" "LICENSE"
 
 
-FROM runatlantis/atlantis:v0.15.1
+FROM runatlantis/atlantis:v0.16.0
 # hadolint ignore=DL3018
 RUN apk --no-cache add py3-pip
 
@@ -33,6 +33,7 @@ COPY --from=downloader /terraform-provider-keycloak* /home/atlantis/.terraform.d
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
+ENV TF_INPUT false
 COPY repos.yaml /etc/atlantis/repos.yaml
 
 RUN chown atlantis:atlantis /usr/local/bin/terragrunt
