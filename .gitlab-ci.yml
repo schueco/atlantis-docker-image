@@ -35,3 +35,12 @@ docker:push:latest:
     - master
   variables:
     IMAGE_TAG: latest
+
+docker:push:tag:
+  stage: docker push
+  extends:
+    - .docker:push
+  only:
+    - tags
+  variables:
+    IMAGE_TAG: $CI_COMMIT_TAG
