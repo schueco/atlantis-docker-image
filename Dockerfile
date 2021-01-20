@@ -38,3 +38,4 @@ COPY repos.yaml /etc/atlantis/repos.yaml
 COPY run.sh /usr/local/bin/run.sh
 RUN chown atlantis:atlantis /usr/local/bin/terragrunt /usr/local/bin/run.sh
 ENTRYPOINT [ "run.sh" ]
+CMD [ "server" ]
