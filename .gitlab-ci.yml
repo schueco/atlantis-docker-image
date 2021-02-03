@@ -1,7 +1,7 @@
 include:
   - project: 'plan.one/templates'
     file: '.docker-workflow-template.yml'
-    ref: 'v3.1.0'
+    ref: 'v3.2.0'
 
 stages:
   - lint
