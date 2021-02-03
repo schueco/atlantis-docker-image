@@ -1,4 +1,4 @@
-FROM alpine:3.11.3 AS downloader
+FROM alpine:3.13.1 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
 ENV KEYCLOAK_PROVIDER_VERSION 1.20.0
