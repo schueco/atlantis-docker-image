@@ -2,7 +2,7 @@ FROM alpine:3.13.1 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
 ENV KEYCLOAK_PROVIDER_VERSION 1.20.0
-ENV TERRAGRUNT_VERSION=v0.28.0
+ENV TERRAGRUNT_VERSION=v0.28.1
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
