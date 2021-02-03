@@ -11,9 +11,7 @@ workflows:
       - env:
           name: TERRAGRUNT_TFPATH
           command: 'echo "terraform${ATLANTIS_TERRAFORM_VERSION}"'
-      - run: >
-          terragrunt plan -no-color -out=$PLANFILE
-          | grep -v "Refreshing state..."
+      - run: terragrunt plan -no-color -out=$PLANFILE
     apply:
       steps:
       - env:
