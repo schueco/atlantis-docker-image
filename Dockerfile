@@ -25,7 +25,7 @@ RUN \
  && rm -rf "SHA256SUMS" "keycloak_provider_SHA256SUMS" "terraform-provider-keycloak_v${KEYCLOAK_PROVIDER_VERSION}_linux_amd64_static.zip" "LICENSE"
 
 
-FROM runatlantis/atlantis:v0.16.0
+FROM runatlantis/atlantis:v0.16.1
 # hadolint ignore=DL3018
 RUN apk --no-cache add py3-pip
 
