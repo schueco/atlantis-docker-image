@@ -8,5 +8,13 @@
     "dependencyDashboard": false,
     "gitLabAutomerge": true,
     "rebaseWhen": "conflicted",
-    "reviewersFromCodeOwners": true
+    "reviewersFromCodeOwners": true,
+    "regexManagers": [
+      {
+        "fileMatch": ["^Dockerfile$"],
+        "matchStrings": ["ENV TERRAGRUNT_VERSION=(?<currentValue>.*?)\n"],
+        "depName": "gruntwork-io/terragrunt",
+        "datasource": "github-releases"
+      }
+    ]
 }
