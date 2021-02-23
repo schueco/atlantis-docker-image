@@ -13,8 +13,8 @@
       {
         "fileMatch": ["^Dockerfile$"],
         "matchStrings": ["ENV TERRAGRUNT_VERSION=(?<currentValue>.*?)\n"],
-        "depName": "gruntwork-io/terragrunt",
-        "datasource": "github-releases"
+        "depNameTemplate": "gruntwork-io/terragrunt",
+        "datasourceTemplate": "github-releases"
       }
     ]
 }
