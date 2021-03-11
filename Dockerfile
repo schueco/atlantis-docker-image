@@ -1,7 +1,7 @@
 FROM alpine:3.13.2 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
-ENV TERRAGRUNT_VERSION=v0.28.8
+ENV TERRAGRUNT_VERSION=v0.28.9
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
