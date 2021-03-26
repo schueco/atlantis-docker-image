@@ -11,7 +11,10 @@ workflows:
       - env:
           name: TERRAGRUNT_TFPATH
           command: 'echo "terraform${ATLANTIS_TERRAFORM_VERSION}"'
-      - run: terragrunt plan -no-color -out=$PLANFILE
+      - env:
+          name: DESTROY_PARAMETER
+          command: if [ "$COMMENT_ARGS" = '\-\d\e\s\t\r\o\y' ]; then echo "-destroy"; else echo ""; fi
+      - run: terragrunt plan -no-color -out=$PLANFILE $DESTROY_PARAMETER
     apply:
       steps:
       - env:
