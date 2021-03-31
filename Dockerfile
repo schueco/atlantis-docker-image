@@ -1,4 +1,4 @@
-FROM alpine:3.13.3 AS downloader
+FROM alpine:3.13.4 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
 ENV TERRAGRUNT_VERSION=v0.28.17
