@@ -6,7 +6,7 @@ ENV TERRAGRUNT_VERSION=v0.29.0
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
 
-FROM runatlantis/atlantis:v0.16.1
+FROM runatlantis/atlantis:v0.17.0
 # hadolint ignore=DL3018
 RUN apk --no-cache add py3-pip
 
