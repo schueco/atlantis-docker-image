@@ -13,11 +13,33 @@ stages:
   rules:
     - if: $CI_MERGE_REQUEST_IID
 
-docker:lint:
+.node_caching:
+  cache:
+    key: "node"
+    paths:
+      - node_modules/
+
+lint:docker:
   stage: lint
   extends:
     - .docker:lint
     - .only_mr
+
+# Lint all commit messages in the merge request.
+# Use interactive rebase or amend to fix messages and then git push --force-with-lease.
+lint:commit:
+  stage: lint
+  extends:
+    - .only_mr
+    - .node_caching
+  image: node:16.6.2
+  before_script:
+    - npm ci
+  variables:
+    # For being able to reliably move back to the merge base, a full clone is required...
+    GIT_DEPTH: 0
+  script:
+    - npx commitlint --from="$(git merge-base HEAD "origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}")"
 
 docker:build:
   stage: docker build
