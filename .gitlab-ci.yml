@@ -2,37 +2,34 @@ include:
   - project: 'plan.one/templates'
     file: '.docker-workflow-template.yml'
     ref: 'v3.2.0'
+  - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
 
 stages:
   - lint
   - docker build
   - docker push
 
+.only_mr:
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
 docker:lint:
   stage: lint
   extends:
     - .docker:lint
+    - .only_mr
 
 docker:build:
   stage: docker build
   extends:
     - .docker:build
 
-docker:push:develop:
-  stage: docker push
-  extends:
-    - .docker:push
-  only:
-    - develop
-  variables:
-    IMAGE_TAG: develop
-
 docker:push:latest:
   stage: docker push
   extends:
     - .docker:push
   only:
-    - master
+    - main
   variables:
     IMAGE_TAG: latest
 
