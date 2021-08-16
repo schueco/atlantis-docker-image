@@ -16,5 +16,14 @@
         "depNameTemplate": "gruntwork-io/terragrunt",
         "datasourceTemplate": "github-releases"
       }
+    ],
+    "packageRules": [
+      {
+        "matchPackagePatterns": [
+          ".*terragrunt.*",
+          ".*atlantis.*"
+        ],
+        "extends": [":semanticCommitTypeAll(fix)"]
+      }
     ]
 }
