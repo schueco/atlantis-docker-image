@@ -2,37 +2,61 @@ include:
   - project: 'plan.one/templates'
     file: '.docker-workflow-template.yml'
     ref: 'v3.2.0'
+  - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
 
 stages:
   - lint
   - docker build
   - docker push
+  - release
 
-docker:lint:
+.only_mr:
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+
+.only_main:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+.node_caching:
+  cache:
+    key: "node"
+    paths:
+      - node_modules/
+
+lint:docker:
   stage: lint
   extends:
     - .docker:lint
+    - .only_mr
+
+# Lint all commit messages in the merge request.
+# Use interactive rebase or amend to fix messages and then git push --force-with-lease.
+lint:commit:
+  stage: lint
+  extends:
+    - .only_mr
+    - .node_caching
+  image: node:16.6.2
+  before_script:
+    - npm ci
+  variables:
+    # For being able to reliably move back to the merge base, a full clone is required...
+    GIT_DEPTH: 0
+  script:
+    - npx commitlint --from="$(git merge-base HEAD "origin/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}")"
 
 docker:build:
   stage: docker build
   extends:
     - .docker:build
 
-docker:push:develop:
-  stage: docker push
-  extends:
-    - .docker:push
-  only:
-    - develop
-  variables:
-    IMAGE_TAG: develop
-
 docker:push:latest:
   stage: docker push
   extends:
     - .docker:push
   only:
-    - master
+    - main
   variables:
     IMAGE_TAG: latest
 
@@ -44,3 +68,26 @@ docker:push:tag:
     - tags
   variables:
     IMAGE_TAG: $CI_COMMIT_TAG
+
+.release_setup:
+  image: node:16
+  stage: release
+  before_script:
+    - npm ci
+
+release:test:
+  extends:
+    - .release_setup
+    - .node_caching
+    - .only_mr
+  needs: []
+  script:
+    - npx semantic-release -d
+
+release:
+  extends:
+    - .release_setup
+    - .node_caching
+    - .only_main
+  script:
+    - npx semantic-release
