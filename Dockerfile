@@ -45,7 +45,6 @@ RUN apk --no-cache add \
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
 ENV TF_INPUT false
-COPY repos.yaml /etc/atlantis/repos.yaml
 COPY run.sh /usr/local/bin/run.sh
 RUN chown atlantis:atlantis /usr/local/bin/terragrunt /usr/local/bin/run.sh
 ENTRYPOINT [ "run.sh" ]
