@@ -12,10 +12,7 @@ RUN apk --no-cache add py3-pip
 
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 
-# Renovate cannot automatically update this version, since there is
-# no datasource for custom alpine package repositories and because
-# the available versions depend on the base alpine image used in
-# runatlantis/atlantis.
+# renovate: datasource=github-releases depName=sgerrand/alpine-pkg-glibc
 ENV GLIBC_VERSION=2.31-r0
 
 # Since alpine is not officially supported by aws-cli we need to
