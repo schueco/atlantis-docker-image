@@ -1,29 +1,18 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-      "config:base"
-    ],
-    "automerge": true,
-    "assigneesFromCodeOwners": true,
-    "dependencyDashboard": false,
-    "gitLabAutomerge": true,
-    "rebaseWhen": "conflicted",
-    "reviewersFromCodeOwners": true,
-    "regexManagers": [
-      {
-        "fileMatch": ["^Dockerfile$"],
-        "matchStrings": ["ENV TERRAGRUNT_VERSION=(?<currentValue>.*?)\n"],
-        "depNameTemplate": "gruntwork-io/terragrunt",
-        "datasourceTemplate": "github-releases"
-      }
-    ],
-    "packageRules": [
-      {
-        "matchPackagePatterns": [
-          ".*terragrunt.*",
-          ".*atlantis.*"
-        ],
-        "extends": [":semanticCommitTypeAll(fix)"]
-      }
-    ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "gitlab>plan.one/infrastructure/renovate-config",
+    "gitlab>plan.one/infrastructure/renovate-config:versionFromComment",
+    "gitlab>plan.one/infrastructure/renovate-config:gitlabAsCiCommitScope"
+  ],
+  "rebaseWhen": "conflicted",
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        ".*terragrunt.*",
+        ".*atlantis.*"
+      ],
+      "extends": [":semanticCommitTypeAll(fix)"]
+    }
+  ]
 }
