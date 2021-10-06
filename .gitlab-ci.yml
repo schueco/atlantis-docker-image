@@ -1,10 +1,10 @@
 include:
   - project: 'plan.one/templates'
     file: '.docker-workflow-template.yml'
-    ref: 'v3.5.4'
+    ref: 'v4.0.1'
   - project: 'plan.one/templates'
     file: '.flux-workflow-template.yml'
-    ref: 'v3.5.4'
+    ref: 'v4.0.1'
   - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
 
 stages:
