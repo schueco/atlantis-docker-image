@@ -3,7 +3,7 @@
     "@commitlint/config-conventional": "17.0.0",
     "commitlint": "17.0.0",
     "@semantic-release/changelog": "6.0.1",
-    "@semantic-release/gitlab": "9.1.2",
+    "@semantic-release/gitlab": "9.3.0",
     "semantic-release": "19.0.2"
   }
 }
