@@ -1,12 +1,12 @@
 FROM alpine:3.16.0 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
-ENV TERRAGRUNT_VERSION=v0.32.4
+ENV TERRAGRUNT_VERSION=v0.37.2
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
 
-FROM runatlantis/atlantis:v0.18.4
+FROM ghcr.io/runatlantis/atlantis:v0.19.3
 # hadolint ignore=DL3018
 RUN apk --no-cache add py3-pip
 
