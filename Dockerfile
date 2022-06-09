@@ -6,34 +6,36 @@ ENV TERRAGRUNT_VERSION=v0.37.2
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
 
-FROM ghcr.io/runatlantis/atlantis:v0.19.4
-COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
-
 # Since alpine is not officially supported by aws-cli we need to
 # build it ourselves.
 # Snippet taken from https://github.com/aws/aws-cli/issues/4685#issuecomment-1094307056
-# renovate: datasource=github-releases depName=sgerrand/alpine-pkg-glibc
-ENV GLIBC_VER=2.35-r0
-# hadolint ignore=DL3018
-RUN apk add --update --no-cache \
-  groff
+FROM python:3.9-alpine as installer
 
 # hadolint ignore=DL3018
-RUN apk del gcompat \
-    && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-${GLIBC_VER}.apk \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VER}/glibc-bin-${GLIBC_VER}.apk \
-    && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
-    && apk add --update --no-cache util-linux openssl python3 glibc-${GLIBC_VER}.apk glibc-bin-${GLIBC_VER}.apk \
-    && unzip awscliv2.zip && aws/install \
-    && rm -rf awscliv2.zip aws glibc-${GLIBC_VER}.apk glibc-bin-${GLIBC_VER}.apk \
-        /usr/local/aws-cli/v2/*/dist/aws_completer \
-        /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
-        /usr/local/aws-cli/v2/*/dist/awscli/examples \
-        /var/cache/apk/*00
+RUN set -ex; \
+    apk add --no-cache \
+    git unzip groff \
+    build-base libffi-dev cmake
 
-# hadolint ignore=DL3018
-RUN apk add --no-cache gcompat
+ENV AWS_CLI_VERSION=2.5.4
+# hadolint ignore=DL3003,SC1091
+RUN set -eux; \
+    mkdir /aws; \
+    git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git /aws; \
+    cd /aws; \
+    sed -i'' 's/PyInstaller.*/PyInstaller==4.10/g' requirements-build.txt; \
+    python -m venv venv; \
+    . venv/bin/activate; \
+    ./scripts/installers/make-exe
+
+FROM ghcr.io/runatlantis/atlantis:v0.19.4
+COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
+COPY --from=installer /aws/dist/awscli-exe.zip /aws/installer.zip
+
+RUN set -ex; \
+    unzip /aws/installer.zip; \
+    ./aws/install --bin-dir /aws-cli-bin; \
+    /aws-cli-bin/aws --version
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
 ENV TF_INPUT false
