@@ -34,8 +34,8 @@ COPY --from=installer /aws/dist/awscli-exe.zip /aws/installer.zip
 
 RUN set -ex; \
     unzip /aws/installer.zip; \
-    ./aws/install --bin-dir /aws-cli-bin; \
-    /aws-cli-bin/aws --version
+    ./aws/install --bin-dir /usr/bin; \
+    aws --version
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
 ENV TF_INPUT false
