@@ -1,7 +1,8 @@
 FROM alpine:3.16.0 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
-ENV TERRAGRUNT_VERSION=v0.37.2
+# renovate:  datasource=github-releases depName=gruntwork-io/terragrunt
+ENV TERRAGRUNT_VERSION=v0.38.3
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
@@ -17,7 +18,8 @@ RUN set -ex; \
     git unzip groff \
     build-base libffi-dev cmake
 
-ENV AWS_CLI_VERSION=2.5.4
+# renovate:  datasource=github-tags depName=aws/aws-cli
+ENV AWS_CLI_VERSION=2.7.12
 # hadolint ignore=DL3003,SC1091
 RUN set -eux; \
     mkdir /aws; \
