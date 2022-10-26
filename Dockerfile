@@ -2,7 +2,7 @@ FROM alpine:3.16.2 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
 # renovate:  datasource=github-releases depName=gruntwork-io/terragrunt
-ENV TERRAGRUNT_VERSION=v0.38.3
+ENV TERRAGRUNT_VERSION=v0.39.2
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
@@ -19,7 +19,7 @@ RUN set -ex; \
     build-base libffi-dev cmake
 
 # renovate:  datasource=github-tags depName=aws/aws-cli
-ENV AWS_CLI_VERSION=2.7.12
+ENV AWS_CLI_VERSION=2.7.24
 # hadolint ignore=DL3003,SC1091
 RUN set -eux; \
     mkdir /aws; \
@@ -30,7 +30,7 @@ RUN set -eux; \
     . venv/bin/activate; \
     ./scripts/installers/make-exe
 
-FROM ghcr.io/runatlantis/atlantis:v0.19.4
+FROM ghcr.io/runatlantis/atlantis:v0.20.0
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 COPY --from=installer /aws/dist/awscli-exe.zip /aws/installer.zip
 
