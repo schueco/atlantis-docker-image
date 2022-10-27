@@ -30,7 +30,7 @@ RUN set -eux; \
     . venv/bin/activate; \
     ./scripts/installers/make-exe
 
-FROM ghcr.io/runatlantis/atlantis:v0.20.0
+FROM ghcr.io/runatlantis/atlantis:v0.20.1
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 COPY --from=installer /aws/dist/awscli-exe.zip /aws/installer.zip
 
