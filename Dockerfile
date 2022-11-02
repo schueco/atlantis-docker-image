@@ -19,13 +19,12 @@ RUN set -ex; \
     build-base libffi-dev cmake
 
 # renovate: datasource=github-tags depName=aws/aws-cli
-ENV AWS_CLI_VERSION=2.7.24
+ENV AWS_CLI_VERSION=2.8.7
 # hadolint ignore=DL3003,SC1091
 RUN set -eux; \
     mkdir /aws; \
     git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git /aws; \
     cd /aws; \
-    sed -i'' 's/PyInstaller.*/PyInstaller==4.10/g' requirements-build.txt; \
     python -m venv venv; \
     . venv/bin/activate; \
     ./scripts/installers/make-exe
