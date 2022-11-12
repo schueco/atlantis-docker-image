@@ -41,7 +41,7 @@ lint:commit:
   extends:
     - .only_mr
     - .node_caching
-  image: node:19.0.0
+  image: node:19.0.1
   before_script:
     - npm ci
   variables:
