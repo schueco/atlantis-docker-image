@@ -1,4 +1,4 @@
-FROM alpine:3.16.2 AS downloader
+FROM alpine:3.16.3 AS downloader
 RUN apk --no-cache add unzip~=6 curl~=7
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
