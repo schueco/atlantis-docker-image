@@ -10,7 +10,7 @@ RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/d
 # Since alpine is not officially supported by aws-cli we need to
 # build it ourselves.
 # Snippet taken from https://github.com/aws/aws-cli/issues/4685#issuecomment-1094307056
-FROM python:3.10-alpine as installer
+FROM python:3.11-alpine as installer
 
 # hadolint ignore=DL3018
 RUN set -ex; \
