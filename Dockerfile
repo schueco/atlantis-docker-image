@@ -1,5 +1,5 @@
 FROM alpine:3.17.0 AS downloader
-RUN apk --no-cache add unzip~=6 curl~=7
+RUN apk --no-cache add curl~=7
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
 ENV TERRAGRUNT_VERSION=v0.41.0
@@ -29,9 +29,20 @@ RUN set -eux; \
     . venv/bin/activate; \
     ./scripts/installers/make-exe
 
+FROM alpine:3.17.0 AS atlantis-config-installer
+
+# renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
+ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.16.0
+
+# hadolint ignore=SC3057
+RUN wget -q "https://github.com/transcend-io/terragrunt-atlantis-config/releases/download/${TERRAGRUNT_ATLANTIS_CONFIG_VERSION}/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64.tar.gz" && \
+    tar -xzvf terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64.tar.gz && \
+    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config
+
 FROM ghcr.io/runatlantis/atlantis:v0.20.1
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 COPY --from=installer /aws/dist/awscli-exe.zip /aws/installer.zip
+COPY --from=atlantis-config-installer /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 
 RUN set -ex; \
     unzip /aws/installer.zip; \
