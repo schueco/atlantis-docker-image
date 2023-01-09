@@ -39,7 +39,7 @@ RUN wget -q "https://github.com/transcend-io/terragrunt-atlantis-config/releases
     tar -xzvf terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64.tar.gz && \
     mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config
 
-FROM ghcr.io/runatlantis/atlantis:v0.21.0
+FROM ghcr.io/runatlantis/atlantis:v0.22.2
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 COPY --from=installer /aws/dist/awscli-exe.zip /aws/installer.zip
 COPY --from=atlantis-config-installer /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
