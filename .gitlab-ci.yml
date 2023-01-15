@@ -1,7 +1,7 @@
 include:
   - project: 'plan.one/templates'
     file: '.docker-workflow-template.yml'
-    ref: 'v6.1.7'
+    ref: 'v6.1.9'
   - template: 'Workflows/MergeRequest-Pipelines.gitlab-ci.yml'
 
 stages:
