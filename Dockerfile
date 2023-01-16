@@ -1,4 +1,4 @@
-FROM alpine:3.17.0 AS downloader
+FROM alpine:3.17.1 AS downloader
 RUN apk --no-cache add curl~=7
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
@@ -29,7 +29,7 @@ RUN set -eux; \
     . venv/bin/activate; \
     ./scripts/installers/make-exe
 
-FROM alpine:3.17.0 AS atlantis-config-installer
+FROM alpine:3.17.1 AS atlantis-config-installer
 
 # renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
 ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.16.0
