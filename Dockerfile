@@ -10,13 +10,14 @@ RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/d
 # Since alpine is not officially supported by aws-cli we need to
 # build it ourselves.
 # Snippet taken from https://github.com/aws/aws-cli/issues/4685#issuecomment-1094307056
-FROM python:3.11-alpine as installer
+FROM python:3.10-alpine as installer
 
 # hadolint ignore=DL3018
 RUN set -ex; \
     apk add --no-cache \
-    git unzip groff \
-    build-base libffi-dev cmake
+    git \
+    build-base \
+    cmake
 
 # renovate: datasource=github-tags depName=aws/aws-cli
 ENV AWS_CLI_VERSION=2.10.3
@@ -25,9 +26,8 @@ RUN set -eux; \
     mkdir /aws; \
     git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git /aws; \
     cd /aws; \
-    python -m venv venv; \
-    . venv/bin/activate; \
-    ./scripts/installers/make-exe
+    ./configure --with-install-type=portable-exe --with-download-deps; \
+    make; 
 
 FROM alpine:3.17.2 AS atlantis-config-installer
 
@@ -41,13 +41,10 @@ RUN wget -q "https://github.com/transcend-io/terragrunt-atlantis-config/releases
 
 FROM ghcr.io/runatlantis/atlantis:v0.22.3
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
-COPY --from=installer /aws/dist/awscli-exe.zip /aws/installer.zip
+COPY --from=installer /aws/build/exe/aws /aws/
 COPY --from=atlantis-config-installer /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 
-RUN set -ex; \
-    unzip /aws/installer.zip; \
-    ./aws/install --bin-dir /usr/bin; \
-    aws --version
+RUN ./aws/install --bin-dir /usr/bin
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
 ENV TF_INPUT false
