@@ -2,7 +2,7 @@ FROM alpine:3.17.2 AS downloader
 RUN apk --no-cache add curl~=7
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-ENV TERRAGRUNT_VERSION=v0.44.0
+ENV TERRAGRUNT_VERSION=v0.44.4
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
