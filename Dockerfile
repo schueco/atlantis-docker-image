@@ -20,7 +20,7 @@ RUN set -ex; \
     cmake
 
 # renovate: datasource=github-tags depName=aws/aws-cli
-ENV AWS_CLI_VERSION=2.11.13
+ENV AWS_CLI_VERSION=2.11.15
 # hadolint ignore=DL3003,SC1091
 RUN set -eux; \
     mkdir /aws; \
