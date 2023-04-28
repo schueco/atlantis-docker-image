@@ -1,5 +1,5 @@
 FROM alpine:3.17.3 AS downloader
-RUN apk --no-cache add curl~=7
+RUN apk --no-cache add curl~=8
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
 ENV TERRAGRUNT_VERSION=v0.45.2
