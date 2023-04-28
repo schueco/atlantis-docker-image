@@ -27,7 +27,7 @@ RUN set -eux; \
     git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git /aws; \
     cd /aws; \
     ./configure --with-install-type=portable-exe --with-download-deps; \
-    make; 
+    make;
 
 FROM alpine:3.17.3 AS atlantis-config-installer
 
@@ -48,7 +48,4 @@ RUN ./aws/install --bin-dir /usr/bin
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
 ENV TF_INPUT false
-COPY run.sh /usr/local/bin/run.sh
-RUN chown atlantis:atlantis /usr/local/bin/terragrunt /usr/local/bin/run.sh
-ENTRYPOINT [ "run.sh" ]
-CMD [ "server" ]
+RUN chown atlantis:atlantis /usr/local/bin/terragrunt
