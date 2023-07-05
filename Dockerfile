@@ -14,7 +14,7 @@ SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 WORKDIR /aws
 
 # renovate: datasource=github-tags depName=aws/aws-cli
-ENV AWS_CLI_VERSION=2.11.15
+ENV AWS_CLI_VERSION=2.12.6
 
 # Installation process adapted from
 # https://github.com/aws/aws-cli/issues/4685#issuecomment-1483496782
