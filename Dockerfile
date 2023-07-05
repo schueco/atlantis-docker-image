@@ -7,27 +7,38 @@ ENV TERRAGRUNT_VERSION=v0.45.2
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
 
-# Since alpine is not officially supported by aws-cli we need to
-# build it ourselves.
-# Snippet taken from https://github.com/aws/aws-cli/issues/4685#issuecomment-1094307056
 FROM python:3.11-alpine as installer
 
-# hadolint ignore=DL3018
-RUN set -ex; \
-    apk add --no-cache \
-    git \
-    build-base \
-    cmake
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+
+WORKDIR /aws
 
 # renovate: datasource=github-tags depName=aws/aws-cli
 ENV AWS_CLI_VERSION=2.11.15
-# hadolint ignore=DL3003,SC1091
-RUN set -eux; \
-    mkdir /aws; \
-    git clone --single-branch --depth 1 -b ${AWS_CLI_VERSION} https://github.com/aws/aws-cli.git /aws; \
-    cd /aws; \
-    ./configure --with-install-type=portable-exe --with-download-deps; \
-    make;
+
+# Installation process adapted from
+# https://github.com/aws/aws-cli/issues/4685#issuecomment-1483496782
+# hadolint ignore=DL3018
+RUN apk add --no-cache \
+  curl~=8 \
+  make~=4 \
+  cmake~=3 \
+  gcc~=12 \
+  g++~=12 \
+  libc-dev~=0.7 \
+  libffi-dev~=3 \
+  openssl-dev~=3 \
+  \
+  && curl https://awscli.amazonaws.com/awscli-${AWS_CLI_VERSION}.tar.gz | tar -xz --strip-components 1 \
+  && ./configure --with-download-deps --with-install-type=portable-exe \
+  && make && make install \
+  \
+  && rm -rf \
+  /usr/local/lib/aws-cli/aws_completer \
+  /usr/local/lib/aws-cli/awscli/data/ac.index \
+  /usr/local/lib/aws-cli/awscli/examples && \
+  find /usr/local/lib/aws-cli/awscli/data -name 'completions-1*.json' -delete && \
+  find /usr/local/lib/aws-cli/awscli/botocore/data -name 'examples-1.json' -delete
 
 FROM alpine:3.18.2 AS atlantis-config-installer
 
