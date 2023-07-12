@@ -12,6 +12,24 @@
         ".*atlantis.*"
       ],
       "extends": [":semanticCommitTypeAll(fix)"]
-    }
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "assignAutomerge": false,
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true
+    },
+    {
+      "matchPackageNames": [
+        "gruntwork-io/terragrunt"
+      ],
+      "matchUpdateTypes": ["minor", "patch"],
+      "assignAutomerge": false,
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true
+    },
   ]
 }
