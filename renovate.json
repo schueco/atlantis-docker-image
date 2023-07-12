@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>schueco/renovate-config"
+    "local>schueco/renovate-config",
+    "local>schueco/renovate-config:versionFromComment"
   ],
   "rebaseWhen": "conflicted",
   "packageRules": [
