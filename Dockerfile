@@ -1,4 +1,4 @@
-FROM alpine:3.18.2 AS downloader
+FROM alpine:3.18.3 AS downloader
 RUN apk --no-cache add curl~=8
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
@@ -7,7 +7,7 @@ ENV TERRAGRUNT_VERSION=v0.48.1
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
 
-FROM alpine:3.18.2 AS atlantis-config-installer
+FROM alpine:3.18.3 AS atlantis-config-installer
 
 # renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
 ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.16.0
