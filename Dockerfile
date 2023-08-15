@@ -22,7 +22,7 @@ COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 COPY --from=atlantis-config-installer /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 
 # renovate: datasource=repology depName=alpine_3_18/awscli versioning=loose
-ENV AWS_CLI_VERSION=2.13.0-r0
+ENV AWS_CLI_VERSION=2.13.5-r0
 RUN apk add --no-cache aws-cli="${AWS_CLI_VERSION}"
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
