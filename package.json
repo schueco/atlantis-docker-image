@@ -4,6 +4,6 @@
     "commitlint": "17.7.1",
     "@semantic-release/changelog": "6.0.3",
     "semantic-release": "21.1.1",
-    "@semantic-release/gitlab": "12.0.5"
+    "@semantic-release/gitlab": "12.0.6"
   }
 }
