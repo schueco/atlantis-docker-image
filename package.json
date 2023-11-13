@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@commitlint/config-conventional": "18.1.0",
+    "@commitlint/config-conventional": "18.4.0",
     "commitlint": "18.4.1",
     "@semantic-release/changelog": "6.0.3",
     "semantic-release": "22.0.7",
