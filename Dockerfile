@@ -17,14 +17,16 @@ RUN wget -q "https://github.com/transcend-io/terragrunt-atlantis-config/releases
     tar -xzvf terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64.tar.gz && \
     mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config
 
-FROM ghcr.io/runatlantis/atlantis:v0.26.0
+FROM ghcr.io/runatlantis/atlantis:v0.27.0
 COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
 COPY --from=atlantis-config-installer /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 
-# renovate: datasource=repology depName=alpine_3_18/awscli versioning=loose
-ENV AWS_CLI_VERSION=2.13.5-r0
+USER root
+# renovate: datasource=repology depName=alpine_3_19/awscli versioning=loose
+ENV AWS_CLI_VERSION=2.13.25-r0
 RUN apk add --no-cache aws-cli="${AWS_CLI_VERSION}"
 
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
 ENV TF_INPUT false
 RUN chown atlantis:atlantis /usr/local/bin/terragrunt
+USER atlantis
