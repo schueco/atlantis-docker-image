@@ -12,4 +12,4 @@ jobs:
     name: "🔍 Validate PR title"
     permissions:
       pull-requests: write
-    uses: schueco/platform-tf-module-reusable-workflows/.github/workflows/pr-title.yml@v1.0.0
+    uses: schueco/platform-tf-module-reusable-workflows/.github/workflows/pr-title.yml@v2.0.0
