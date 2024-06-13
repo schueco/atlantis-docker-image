@@ -1,25 +1,43 @@
-FROM alpine:3.20.0 AS downloader
+FROM alpine:3.20.0 AS setup-base
 RUN apk --no-cache add curl~=8
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
 ENV TERRAGRUNT_VERSION=v0.48.1
 
+# renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
+ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.18.0
+
+
+
+# arm64-specific stage
+FROM setup-base AS setup-arm64
+
+
+RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_arm64 && \
+    chmod +x terragrunt
+
+RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/download/${TERRAGRUNT_ATLANTIS_CONFIG_VERSION}/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_arm64 && \
+    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_arm64 /terragrunt-atlantis-config
+
+
+# amd64-specific stage
+FROM setup-base AS setup-amd64
+
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
     chmod +x terragrunt
 
-FROM alpine:3.20.0 AS atlantis-config-installer
+RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/download/${TERRAGRUNT_ATLANTIS_CONFIG_VERSION}/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 && \
+    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config
 
-# renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
-ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.16.0
+
+
+FROM setup-${TARGETARCH} AS terragrunt-setup
 
 # hadolint ignore=SC3057
-RUN wget -q "https://github.com/transcend-io/terragrunt-atlantis-config/releases/download/${TERRAGRUNT_ATLANTIS_CONFIG_VERSION}/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64.tar.gz" && \
-    tar -xzvf terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64.tar.gz && \
-    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config
 
 FROM ghcr.io/runatlantis/atlantis:v0.28.1
-COPY --from=downloader /terragrunt /usr/local/bin/terragrunt
-COPY --from=atlantis-config-installer /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
+COPY --from=terragrunt-setup /terragrunt /usr/local/bin/terragrunt
+COPY --from=terragrunt-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 
 USER root
 # renovate: datasource=repology depName=alpine_3_19/awscli versioning=loose
