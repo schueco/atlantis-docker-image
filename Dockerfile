@@ -7,18 +7,15 @@ ENV TERRAGRUNT_VERSION=v0.48.1
 # renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
 ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.18.0
 
-
-
 # arm64-specific stage
 FROM setup-base AS setup-arm64
-
 
 RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_arm64 && \
     chmod +x terragrunt
 
 RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/download/${TERRAGRUNT_ATLANTIS_CONFIG_VERSION}/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_arm64 && \
-    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_arm64 /terragrunt-atlantis-config
-
+    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_arm64 /terragrunt-atlantis-config && \
+    chmod +x terragrunt-atlantis-config
 
 # amd64-specific stage
 FROM setup-base AS setup-amd64
@@ -27,14 +24,12 @@ RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/d
     chmod +x terragrunt
 
 RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/download/${TERRAGRUNT_ATLANTIS_CONFIG_VERSION}/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 && \
-    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config
-
-
+    mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config && \
+    chmod +x terragrunt-atlantis-config
 
 FROM setup-${TARGETARCH} AS terragrunt-setup
 
 # hadolint ignore=SC3057
-
 FROM ghcr.io/runatlantis/atlantis:v0.28.1
 COPY --from=terragrunt-setup /terragrunt /usr/local/bin/terragrunt
 COPY --from=terragrunt-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
