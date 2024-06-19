@@ -36,7 +36,7 @@ COPY --from=terragrunt-setup /terragrunt-atlantis-config /usr/local/bin/terragru
 
 USER root
 # renovate: datasource=repology depName=alpine_3_19/awscli versioning=loose
-ENV AWS_CLI_VERSION=2.13.25-r0
+ENV AWS_CLI_VERSION=2.15.57-r0
 RUN apk add --no-cache \
   aws-cli="${AWS_CLI_VERSION}" \
   jq
