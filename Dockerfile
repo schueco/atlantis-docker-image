@@ -30,7 +30,7 @@ RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/
 FROM setup-${TARGETARCH} AS terragrunt-setup
 
 # hadolint ignore=SC3057
-FROM ghcr.io/runatlantis/atlantis:v0.31.0
+FROM ghcr.io/runatlantis/atlantis:v0.32.0
 COPY --from=terragrunt-setup /terragrunt /usr/local/bin/terragrunt
 COPY --from=terragrunt-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 
