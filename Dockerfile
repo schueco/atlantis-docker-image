@@ -23,7 +23,9 @@ RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/
 RUN wget -q https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-arm64.tgz && \
     tar -xf mongosh-${MONGOSH_VERSION}-linux-arm64.tgz && \
     mv mongosh-${MONGOSH_VERSION}-linux-arm64/bin/mongosh /mongosh && \
-    chmod +x mongosh
+    chmod +x mongosh && \
+    mv mongosh-${MONGOSH_VERSION}-linux-arm64/bin/mongosh_crypt_v1.so /mongosh_crypt_v1.so && \
+    chmod +x mongosh_crypt_v1.so
 
 # amd64-specific stage
 FROM setup-base AS setup-amd64
@@ -38,7 +40,9 @@ RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/
 RUN wget -q https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-x64.tgz && \
     tar -xf mongosh-${MONGOSH_VERSION}-linux-x64.tgz && \
     mv mongosh-${MONGOSH_VERSION}-linux-x64/bin/mongosh /mongosh && \
-    chmod +x mongosh
+    chmod +x mongosh && \
+    mv mongosh-${MONGOSH_VERSION}-linux-x64/bin/mongosh_crypt_v1.so /mongosh_crypt_v1.so && \
+    chmod +x mongosh_crypt_v1.so
 
 FROM setup-${TARGETARCH} AS cli-setup
 
@@ -47,6 +51,7 @@ FROM ghcr.io/runatlantis/atlantis:v0.31.0
 COPY --from=cli-setup /terragrunt /usr/local/bin/terragrunt
 COPY --from=cli-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 COPY --from=cli-setup /mongosh /usr/local/bin/mongosh
+COPY --from=cli-setup /mongosh_crypt_v1.so /usr/local/bin/mongosh_crypt_v1.so
 
 USER root
 # renovate: datasource=repology depName=alpine_3_19/awscli versioning=loose
