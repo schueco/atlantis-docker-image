@@ -29,10 +29,14 @@ RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/
 
 FROM setup-${TARGETARCH} AS terragrunt-setup
 
+# mongodb cli support
+FROM alpine/mongosh:2.0.2 AS mongosh-setup
+
 # hadolint ignore=SC3057
 FROM ghcr.io/runatlantis/atlantis:v0.31.0
 COPY --from=terragrunt-setup /terragrunt /usr/local/bin/terragrunt
 COPY --from=terragrunt-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
+COPY --from=mongosh-setup /usr/local/bin/mongosh /usr/local/bin/mongosh
 
 USER root
 # renovate: datasource=repology depName=alpine_3_19/awscli versioning=loose
@@ -44,4 +48,5 @@ RUN apk add --no-cache \
 ENV ATLANTIS_REPO_CONFIG /etc/atlantis/repos.yaml
 ENV TF_INPUT false
 RUN chown atlantis:atlantis /usr/local/bin/terragrunt
+RUN chown atlantis:atlantis /usr/local/bin/mongosh
 USER atlantis
