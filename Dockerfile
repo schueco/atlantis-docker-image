@@ -7,6 +7,9 @@ ENV TERRAGRUNT_VERSION=v0.48.1
 # renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
 ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.18.0
 
+# renovate: datasource=github-releases depName=mongodb-js/mongosh
+ENV MONGOSH_VERSION=2.3.8
+
 # arm64-specific stage
 FROM setup-base AS setup-arm64
 
@@ -16,6 +19,11 @@ RUN curl -s -Lo terragrunt https://github.com/gruntwork-io/terragrunt/releases/d
 RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/download/${TERRAGRUNT_ATLANTIS_CONFIG_VERSION}/terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_arm64 && \
     mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_arm64 /terragrunt-atlantis-config && \
     chmod +x terragrunt-atlantis-config
+
+RUN wget -q https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-arm64.tgz && \
+    tar -xf mongosh-${MONGOSH_VERSION}-linux-arm64.tgz && \
+    mv mongosh-${MONGOSH_VERSION}-linux-arm64/bin/mongosh /mongosh && \
+    chmod +x mongosh
 
 # amd64-specific stage
 FROM setup-base AS setup-amd64
@@ -27,16 +35,18 @@ RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/
     mv terragrunt-atlantis-config_${TERRAGRUNT_ATLANTIS_CONFIG_VERSION:1}_linux_amd64 /terragrunt-atlantis-config && \
     chmod +x terragrunt-atlantis-config
 
-FROM setup-${TARGETARCH} AS terragrunt-setup
+RUN wget -q https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-linux-x64.tgz && \
+    tar -xf mongosh-${MONGOSH_VERSION}-linux-x64.tgz && \
+    mv mongosh-${MONGOSH_VERSION}-linux-x64/bin/mongosh /mongosh && \
+    chmod +x mongosh
 
-# mongodb cli support
-FROM alpine/mongosh:2.0.2 AS mongosh-setup
+FROM setup-${TARGETARCH} AS cli-setup
 
 # hadolint ignore=SC3057
 FROM ghcr.io/runatlantis/atlantis:v0.31.0
-COPY --from=terragrunt-setup /terragrunt /usr/local/bin/terragrunt
-COPY --from=terragrunt-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
-COPY --from=mongosh-setup /usr/local/bin/mongosh /usr/local/bin/mongosh
+COPY --from=cli-setup /terragrunt /usr/local/bin/terragrunt
+COPY --from=cli-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
+COPY --from=cli-setup /mongosh /usr/local/bin/mongosh
 
 USER root
 # renovate: datasource=repology depName=alpine_3_19/awscli versioning=loose
