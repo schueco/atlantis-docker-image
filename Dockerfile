@@ -47,7 +47,7 @@ RUN wget -q https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSION}-lin
 FROM setup-${TARGETARCH} AS cli-setup
 
 # hadolint ignore=SC3057
-FROM ghcr.io/runatlantis/atlantis:v0.31.0
+FROM ghcr.io/runatlantis/atlantis:v0.34.0
 COPY --from=cli-setup /terragrunt /usr/local/bin/terragrunt
 COPY --from=cli-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 COPY --from=cli-setup /mongosh /usr/local/bin/mongosh
