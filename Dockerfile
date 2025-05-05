@@ -1,4 +1,4 @@
-FROM alpine:3.21.2 AS setup-base
+FROM alpine:3.21.3 AS setup-base
 RUN apk --no-cache add curl~=8
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
