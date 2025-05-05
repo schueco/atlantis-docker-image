@@ -30,13 +30,13 @@ RUN wget -q https://github.com/transcend-io/terragrunt-atlantis-config/releases/
 FROM setup-${TARGETARCH} AS cli-setup
 
 # hadolint ignore=SC3057
-FROM ghcr.io/runatlantis/atlantis:v0.31.0
+FROM ghcr.io/runatlantis/atlantis:v0.34.0
 COPY --from=cli-setup /terragrunt /usr/local/bin/terragrunt
 COPY --from=cli-setup /terragrunt-atlantis-config /usr/local/bin/terragrunt-atlantis-config
 
 USER root
 # renovate: datasource=repology depName=alpine_3_19/awscli versioning=loose
-ENV AWS_CLI_VERSION=2.15.57-r0
+ENV AWS_CLI_VERSION=2.22.10-r0
 RUN apk add --no-cache \
   aws-cli="${AWS_CLI_VERSION}" \
   jq
