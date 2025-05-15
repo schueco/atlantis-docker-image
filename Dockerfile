@@ -2,7 +2,7 @@ FROM alpine:3.21.2 AS setup-base
 RUN apk --no-cache add curl~=8
 
 # renovate: datasource=github-releases depName=gruntwork-io/terragrunt
-ENV TERRAGRUNT_VERSION=v0.48.1
+ENV TERRAGRUNT_VERSION=v0.78.3
 
 # renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
 ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.18.0
