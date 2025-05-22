@@ -5,7 +5,7 @@ RUN apk --no-cache add curl~=8
 ENV TERRAGRUNT_VERSION=v0.78.3
 
 # renovate: datasource=github-releases depName=transcend-io/terragrunt-atlantis-config
-ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.18.0
+ENV TERRAGRUNT_ATLANTIS_CONFIG_VERSION=v1.20.0
 
 # arm64-specific stage
 FROM setup-base AS setup-arm64
