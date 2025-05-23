@@ -7,14 +7,19 @@
   "rebaseWhen": "conflicted",
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        ".*terragrunt.*",
-        ".*atlantis.*"
+      "extends": [
+        ":semanticCommitTypeAll(fix)"
       ],
-      "extends": [":semanticCommitTypeAll(fix)"]
+      "matchPackageNames": [
+        "/.*terragrunt.*/",
+        "/.*atlantis.*/"
+      ]
     },
     {
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "matchCurrentVersion": "!/^0/",
       "assignAutomerge": false,
       "automerge": true,
@@ -25,7 +30,10 @@
       "matchPackageNames": [
         "gruntwork-io/terragrunt"
       ],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "assignAutomerge": false,
       "automerge": true,
       "automergeType": "branch",
